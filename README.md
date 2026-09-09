@@ -1,9 +1,9 @@
 # O&P Global Securities - High-Resilience Vulnerability Remediation Framework
 
-##  Overview
-This codebase represents a decoupled, parallel automated environment provisioning and patch remediation architecture designed for a 100% AWS cloud estate. 
+## Overview
+This codebase represents a decoupled, parallel automated environment provisioning and patch remediation architecture designed for a 100% AWS cloud estate.
 
-## 🛠️uick Start Operations
+## Quick Start Operations
 
 ### 1. Terraform Deployment Loop
 ```bash
