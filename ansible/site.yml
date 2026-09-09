@@ -1,0 +1,8 @@
+---
+- name: Corporate Vulnerability Mitigation & Remediations Playbook
+  hosts: Patch_group_Production_Wave1
+  become: yes
+  serial: 1 # Enforces a safe rolling update architecture
+
+  roles:
+    - patching

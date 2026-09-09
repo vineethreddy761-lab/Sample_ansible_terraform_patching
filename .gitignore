@@ -1,0 +1,9 @@
+.terraform/
+*.tfstate
+*.tfstate.backup
+.terraform.tfstate.lock.info
+*.tfvars
+*.tfvars.json
+*.log
+*.retry
+.ansible/

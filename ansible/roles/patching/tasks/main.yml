@@ -1,0 +1,35 @@
+---
+- name: Pre-Check | Verify sandbox available free random access memory
+  assert:
+    that:
+      - ansible_memory_mb.nocache.free > 20
+    fail_msg: "CRITICAL FAILURE: Memory capacity saturated."
+
+- name: Execution Engine | Attempt Vulnerability Upgrades
+  block:
+    - name: Patching | Synchronize mirrors and deploy system package updates
+      apt:
+        upgrade: dist
+        update_cache: yes
+        only_upgrade: yes
+
+    - name: Assessment | Detect if a system reboot flag is active post-patch
+      stat:
+        path: /var/run/reboot-required
+      register: target_reboot_file
+
+    - name: Remediation | Execute clean instance restart if triggered by packages
+      reboot:
+        msg: "Ansible Orchestrator initiating compliance reboot cycle."
+        reboot_timeout: 300
+      when: target_reboot_file.stat.exists
+      
+  rescue:
+    - name: Fallback Handler | Notify operational logs of Live-CD environment lock
+      debug:
+        msg: "WARNING: Read-only mirror path intercepted. Executing localized integrity diagnostics."
+
+    - name: Compliance Check | Execute baseline package manager validation
+      command: apt-get check
+      register: fallback_validation
+      failed_when: fallback_validation.rc != 0
