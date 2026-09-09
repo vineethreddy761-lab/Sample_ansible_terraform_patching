@@ -1,0 +1,47 @@
+"O&P Infrastructure Automated Compliance Pipeline"
+
+# Trigger the automation engine on every code commit to the main branch
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate_framework:
+    name: "Automated Syntax & Compliance Validation"
+    runs-on: ubuntu-latest
+
+    steps:
+      #  Step 1: Pull the latest codebase from your GitHub repository
+      - name: "Git Operations | Checkout Repository Code"
+        uses: actions/checkout@v4
+
+      # ☁️Step 2: Set up the Terraform engine environment configuration
+      - name: "Terraform Setup | Initialize Provisioning Engine Binary"
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.5.0"
+
+      #  Step 3: Run the IaC structural and format check loops
+      - name: "Terraform Pipeline | Execute Format & Syntax Verification"
+        run: |
+          cd terraform/
+          terraform init -backend=false
+          terraform fmt -check
+          terraform validate
+
+      #   Step 4: Install the Ansible automation platform dependencies
+      - name: "Ansible Setup | Initialize Configuration Management Engine"
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ansible ansible-lint
+
+      #   Step 5: Validate your patch remediation playbooks and dynamic inventories
+      - name: "Ansible Pipeline | Execute Playbook Syntax Validation Scan"
+        run: |
+          cd ansible/
+          ansible-playbook site.yml --syntax-check
+
